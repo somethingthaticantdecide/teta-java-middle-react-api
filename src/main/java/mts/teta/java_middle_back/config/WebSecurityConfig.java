@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                 .and()
                     .formLogin()
                     .loginPage("/api/auth")
+                    .defaultSuccessUrl("/courses", true)
                     .permitAll()
                 .and()
                     .logout()
