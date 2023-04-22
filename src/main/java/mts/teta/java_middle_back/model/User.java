@@ -3,27 +3,27 @@ package mts.teta.java_middle_back.model;
 import mts.teta.java_middle_back.model.roles.Role;
 
 import lombok.*;
-import org.hibernate.Hibernate;
+//import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import javax.persistence.*;
+//import javax.persistence.*;
 
 @Getter
 @Setter
-@Table(name = "usr")
-@Entity
+//@Table(name = "usr")
+//@Entity
 @NoArgsConstructor
 public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", nullable = false)
     private Long id;
     private String firstname;
     private String lastname;
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
     private Role roles;
     private String login;
     private String password;
@@ -50,13 +50,13 @@ public class User implements UserDetails {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+//        User user = (User) o;
+//        return id != null && Objects.equals(id, user.id);
+//    }
 
     @Override
     public int hashCode() {

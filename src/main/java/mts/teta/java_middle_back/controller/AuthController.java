@@ -29,6 +29,7 @@ public class AuthController {
         final String token = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new JwtResponse(token));
     }
+
     @PostMapping
     public String doPost(HttpServletRequest request, Model model) {
         String username = request.getParameter("username");
