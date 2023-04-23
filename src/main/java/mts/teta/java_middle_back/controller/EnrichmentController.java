@@ -12,7 +12,7 @@ public class EnrichmentController {
     EnrichmentService enrichmentService;
 
     @PostMapping("/enrich")
-    public String doPost(String message) {
+    public String doPost(@RequestBody String message) {
         return "signIn";
     }
 }
