@@ -11,7 +11,7 @@ public class EnrichmentController {
     @Autowired
     EnrichmentService enrichmentService;
 
-    @GetMapping("/enrich")
+    @PostMapping("/enrich")
     public String doPost(Message message) {
         return "signIn";
     }
