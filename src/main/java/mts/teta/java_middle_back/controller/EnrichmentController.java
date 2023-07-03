@@ -19,9 +19,9 @@ public class EnrichmentController {
             String body = enrichmentService.enrich(message);
             return ResponseEntity.ok(body);
         } catch (JSONException e) {
-            return ResponseEntity.unprocessableEntity().build();
+            return ResponseEntity.unprocessableEntity().body(message);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(message);
         }
     }
 }

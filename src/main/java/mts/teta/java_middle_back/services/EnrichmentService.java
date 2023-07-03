@@ -5,9 +5,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.*;
+
 @Service
 public class EnrichmentService {
     private final MessageValidator validator;
+    ExecutorService executor = Executors.newFixedThreadPool(4);
 
     public EnrichmentService(MessageValidator validator) {
         this.validator = validator;
@@ -16,13 +19,26 @@ public class EnrichmentService {
     public String enrich(String body) throws JSONException {
         JSONObject message = new JSONObject(body);
         if (!validator.validateMessage(message)) {
-            throw new IllegalArgumentException("msisdn is required; it must not be null");
+            return body;
         }
-        enrichJson(message);
-        return message.toString();
+
+        Callable<String> task = () -> enrichJson(message);
+        Future<String> futureResult = executor.submit(task);
+
+        try {
+            return futureResult.get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private static void enrichJson(JSONObject message) throws JSONException {
-        message.put("name", "John");
+    private String enrichJson(JSONObject message){
+        try {
+            message.put("name", "John");
+        } catch (JSONException ignored) {
+        }
+        return message.toString();
     }
 }
