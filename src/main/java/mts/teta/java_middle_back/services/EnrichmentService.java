@@ -16,29 +16,38 @@ public class EnrichmentService {
         this.validator = validator;
     }
 
-    public String enrich(String body) throws JSONException {
-        JSONObject message = new JSONObject(body);
+    public String enrich(String body) {
+        JSONObject message;
+        try {
+            message = new JSONObject(body);
+        } catch (JSONException e) {
+            throw new IllegalArgumentException("Invalid JSON format", e);
+        }
+
         if (!validator.validateMessage(message)) {
             return body;
         }
 
-        Callable<String> task = () -> enrichJson(message);
-        Future<String> futureResult = executor.submit(task);
+        Future<String> futureResult = executor.submit(() -> enrichJson(message));
 
         try {
             return futureResult.get();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Enrichment process failed", e);
+        } finally {
+            futureResult.cancel(true); // Cancel the task if it hasn't completed yet
         }
     }
 
-    private String enrichJson(JSONObject message){
+    private String enrichJson(JSONObject message) {
         try {
             message.put("name", "John");
         } catch (JSONException ignored) {
         }
         return message.toString();
+    }
+
+    public void shutdown() {
+        executor.shutdown();
     }
 }
