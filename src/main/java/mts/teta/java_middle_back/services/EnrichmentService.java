@@ -34,12 +34,17 @@ public class EnrichmentService {
             return body;
         }
 
-        Future<String> futureResult = executor.submit(() -> enrichJson(message));
+
+//        Future<String> futureResult = executor.submit(() -> enrichJson(message));
+        CompletableFuture<String> futureResult = CompletableFuture.supplyAsync(() -> enrichJson(message), executor);
 
         try {
-            return futureResult.get();
+            return futureResult.get(5, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
+            futureResult.cancel(false); // Cancel the task if it hasn't completed yet
             throw new RuntimeException("Enrichment process failed", e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
         } finally {
             futureResult.cancel(true); // Cancel the task if it hasn't completed yet
         }
